@@ -1,3 +1,0 @@
-v++ --target hw --config common-config.cfg --config binary_container_1-krnl_skt_stream-compile.cfg -I/usr/include/x86_64-linux-gnu -okrnl_skt_stream.xo src/krnl_skt_stream.cpp
-rm -rf binary_container_1.build/
-v++ --target hw --link --config common-config.cfg --config binary_container_1-link.cfg -oskt_stream.xclbin krnl_skt_stream.xo

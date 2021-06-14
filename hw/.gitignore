@@ -1,0 +1,6 @@
+.Xil/
+krnl_skt_stream.build/
+*.log
+skt_stream
+skt_stream.o
+krnl_skt_stream.xo*

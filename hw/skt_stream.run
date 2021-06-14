@@ -1,8 +1,0 @@
-#!/bin/bash -e
-
-for i in 1008 10000 100000 1000000 10000000 100000000 500000000; do
-  echo "N=$i"
-  ./skt_stream ./skt_stream.xclbin $i
-  if [ -e a.sketch ]; then mv a.sketch skt_stream_$i.sketch; fi
-  echo
-done | tee skt_stream.log
