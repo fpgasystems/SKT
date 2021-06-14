@@ -44,7 +44,7 @@ int main(int argc, char* argv[]) {
 
     // Validate and Capture Arguments
     if (argc != 10) {
-        std::cout << "Usage: " << argv[0] << " '<hash>' <num_items> <bucket_bits> <num_rows> <bucket_bits> <num_rows> <bucket_bits> <num_threads> <repetitions>\n\n  Hashes:\n";
+        std::cout << "Usage: " << argv[0] << " '<hash>' <num_items> <hll_bucket_bits> <fagsm_num_rows> <fagms_bucket_bits> <cm_num_rows> <cm_bucket_bits> <num_threads> <repetitions>\n\n  Hashes:\n";
         for(unsigned i = 0; i < (unsigned)hash_e::end; i++) std::cout << '\t' << name_of((hash_e)i) << '\n';
         std::cout << std::endl;
         return  1;
@@ -100,11 +100,11 @@ int main(int argc, char* argv[]) {
 
     std::cout
         << " H=" << name_of(hash)
-        << " Bhll=" << hp_val
-        << " Ragms=" << ar_val
-        << " Bagms=" << ap_val
-        << " Rcm=" << cr_val
-        << " Bcm=" << cp_val
+        << " P_hll=" << hp_val
+        << " R_fagms=" << ar_val
+        << " P_fagms=" << ap_val
+        << " R_cm=" << cr_val
+        << " P_cm=" << cp_val
         << " T=" << num_threads << " (mod " << num_cores << " cores)" 
         << " Repetitions=" << repetitions << std::endl;
 
@@ -173,18 +173,18 @@ int main(int argc, char* argv[]) {
     }     
 
     // Report Measurements
-//  double const std_error = (cardest/(double)num_items - 1.0) * 100.0;
-//  double const ref_error = 100.0*(1.04/sqrt(1<<hp_val));
-//  std::cout << std::fixed << std::setprecision(4)
-//      << "  Estimated Cardinality: " << cardest << "\t[exp: " << num_items << ']' << std::endl
-//      << "  Standard Error: " << std_error << "%\t[limit: " << ref_error << "%]";
+  double const std_error = (cardest/(double)num_items - 1.0) * 100.0;
+  double const ref_error = 100.0*(1.04/sqrt(1<<hp_val));
+  std::cout << std::fixed << std::setprecision(4)
+      << "  Estimated Cardinality: " << cardest << "\t[exp: " << num_items << ']' << std::endl
+      << "  Standard Error: " << std_error << "%\t[limit: " << ref_error << "%]";
 //  if(fabs(std_error) > ref_error) std::cout << "\t! OUT OF RANGE !";
 //    
-//  std::cout<<std::endl;
-//
-//  std::cout<< std::fixed << std::setprecision(4)
-//          << "  Median: " << median <<  std::endl;
-//
+  std::cout<<std::endl;
+
+  std::cout<< std::fixed << std::setprecision(4)
+          << "  Median: " << median <<  std::endl;
+
 //  float const d0 = std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count()/1000.f;
 //  float const d1 = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t0).count()/1000.f;
 //  std::cout
