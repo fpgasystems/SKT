@@ -212,21 +212,6 @@ static void cm_sketch(
 	}
 
 	// Collect Counts
-/*
-	static hls::stream<cmined_t>  aggr_in[N*R_CM];
-#pragma HLS aggregate variable=aggr_in
-	static Aggregate<ap_uint<P_CM>, ap_uint<W_CM>, 8>  aggr[N*R_CM];
-#pragma HLS array_partition variable=aggr dim=1 complete
-	for(int  i = 0; i < N*R_CM; i++) {
-#pragma HLS unroll
-		aggr[i].aggregate(
-			cmined[i/R_CM][i%R_CM], aggr_in[i],
-			[](ap_uint<W_CM> const& a, ap_uint<W_CM> const& b) -> ap_uint<W_CM> {
-				return  a + b;
-			}
-		);
-	}
-*/
 	static hls::stream<counted_t>  counts0[R_CM][N];
 #pragma HLS aggregate variable=counts0
 	static /*U*/Collect<ap_uint<P_CM>, ap_uint<W_CM>>  collect[R_CM*N];
