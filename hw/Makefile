@@ -17,30 +17,36 @@ CXXFLAGS := -std=c++0x -O2 -Wall -g \
 	-DVITIS_PLATFORM=$(VITIS_PLATFORM) -D__USE_XOPEN2K8 \
 	-I$(XILINX_XRT)/include/ -I$(XILINX_VIVADO)/include
 
-.PHONY: all host hw clean
+.PHONY: all host hw clean clobber
 all: host hw
-host: skt_stream
-hw:   skt_stream.xclbin
+host: bin/skt_stream
+hw:   bin/skt_stream.xclbin
 
 #----------------------------------------------------------------------------
 # Build Host Application
-skt_stream: skt_stream.o
+bin/skt_stream: bld/skt_stream.o
+	mkdir -p bin
 	$(CXX) -o$@ $^ -Wl,-rpath-link,$(XILINX_XRT)/lib -L$(XILINX_XRT)/lib \
 	-lxilinxopencl -lrt
 
-skt_stream.o: src/skt_stream.cpp src/skt_stream.hpp
+bld/skt_stream.o: src/skt_stream.cpp src/skt_stream.hpp
+	mkdir -p bld
 	$(CXX) $(CXXFLAGS) -c -o$@ $<
 
 #----------------------------------------------------------------------------
 # Build Kernel
-skt_stream.xclbin: krnl_skt_stream.xo
+bin/skt_stream.xclbin: bld/krnl_skt_stream.xo
+	mkdir -p bin
 	v++ --target hw --link --config common-config.cfg --config krnl_skt_stream-link.cfg -o$@ $<
 
-krnl_skt_stream.xo: src/krnl_skt_stream.cpp src/skt_stream.hpp src/bit_utils.hpp src/streaming.hpp src/distr.hpp
+bld/krnl_skt_stream.xo: src/krnl_skt_stream.cpp src/skt_stream.hpp src/bit_utils.hpp src/streaming.hpp src/distr.hpp
+	mkdir -p bld
 	v++ --target hw --config common-config.cfg --config krnl_skt_stream-compile.cfg \
 		-I/usr/include/x86_64-linux-gnu -o$@ $<
 
 #----------------------------------------------------------------------------
 # Clean-up
 clean:
-	rm -rf skt_stream skt_stream.o krnl_skt_stream.xo*
+	rm -rf .Xil/ bld/ *.log
+clobber: clean
+	rm -rf bin/
