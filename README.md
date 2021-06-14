@@ -7,5 +7,6 @@ anylysis of possible design trade-offs in terms of sketch dimensions and input b
 shared shortly.
 
 ## Repo Structure
-- [`sw`](sw/) - a SKT software reference implementation
 - [`hw`](hw/) - the SKT hardware accelerator kernel + example host application
+- [`sw`](sw/) - SW-SKT, the SKT software reference implementation
+
