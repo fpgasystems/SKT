@@ -14,6 +14,8 @@
 #include <vector>
 #include <chrono>
 
+#include <boost/iostreams/device/mapped_file.hpp>
+
 struct output_t {
 	uint64_t  agms[R_AGMS];
 	uint32_t  cnt;
@@ -45,8 +47,8 @@ struct aligned_allocator {
 int main(int const  argc, char const *const  argv[]) {
 
 	// TARGET_DEVICE macro needs to be passed from gcc command line
-	if(argc != 3) {
-		std::cout << "Usage: " << argv[0] <<" <xclbin> <items>" << std::endl;
+	if((argc < 3) || (4 < argc)) {
+		std::cout << "Usage: " << argv[0] <<" <xclbin> <items> [file.bin]" << std::endl;
 		return EXIT_FAILURE;
 	}
 	char const*   const  xclbinFilename = argv[1];
@@ -76,7 +78,30 @@ int main(int const  argc, char const *const  argv[]) {
 		char *const  buf = new char[nb];
 		bin_file.seekg(0, bin_file.beg);
 		bin_file.read(buf, nb);
-		bins.push_back({buf,nb});
+		bins.push_back({buf, nb});
+	}
+
+	uint32_t const *data;
+
+	boost::iostreams::mapped_file  data_file;
+	auto const  buf_deleter = [](uint32_t *p) { free(p); };
+	std::unique_ptr<uint32_t, decltype(buf_deleter)>    data_buf(nullptr, buf_deleter);
+	if(argc == 4) {
+		data_file.open(argv[3], std::ios_base::in);
+		if(n > data_file.size()/sizeof(uint32_t)) {
+			std::cerr << "File too short." << std::endl;
+			return  EXIT_FAILURE;
+		}
+		data = (uint32_t const*)data_file.const_data();
+	}
+	else {
+		void* ptr = nullptr;
+		if(posix_memalign(&ptr, 4096, n*sizeof(uint32_t)))  throw  std::bad_alloc();
+
+		uint32_t *const  data_mod = reinterpret_cast<uint32_t*>(ptr);
+		data_buf.reset(data_mod);
+		for(size_t  i = 0; i < n; i++)  data_mod[i] = i;
+		data = data_mod;
 	}
 
 	// Creating Context and Command Queue for selected device
@@ -97,9 +122,7 @@ int main(int const  argc, char const *const  argv[]) {
 	ext.flags = 1;
 	cl_stream  k2h_stream = clCreateStream(devices[0].get(), CL_STREAM_READ_ONLY, CL_STREAM, &ext, &ret);
 
-	std::vector<uint32_t, aligned_allocator<uint32_t>>  x(n);
 	std::vector<output_t, aligned_allocator<output_t>>  y(1);
-	for(unsigned i = 0 ; i < n; i++)  x[i] = i;
 
 	auto const t1 = std::chrono::system_clock::now();
 
@@ -107,7 +130,7 @@ int main(int const  argc, char const *const  argv[]) {
 	cl_stream_xfer_req  wr_req{0};
 	wr_req.flags = CL_STREAM_EOT | CL_STREAM_NONBLOCKING;
 	wr_req.priv_data = (void*)"write";
-	clWriteStream(h2k_stream, x.data(), n*sizeof(uint32_t), &wr_req , &ret);
+	clWriteStream(h2k_stream, data, n*sizeof(uint32_t), &wr_req , &ret);
 
 	// Initiate the READ transfer
 	cl_stream_xfer_req  rd_req{0};
