@@ -7,12 +7,12 @@ static unsigned const  N = 16;
 
 static unsigned constexpr  P_HLL  = 16;
 
-static unsigned constexpr  R_AGMS =  9;
+static unsigned constexpr  R_AGMS =  6;
 static unsigned constexpr  P_AGMS = 13;
 static unsigned constexpr  W_AGMS = 32;
 static unsigned constexpr  AGMS_BITS = R_AGMS*(1+P_AGMS);
 
-static unsigned constexpr  R_CM =  9;
+static unsigned constexpr  R_CM =  6;
 static unsigned constexpr  P_CM = 13;
 static unsigned constexpr  W_CM = 32;
 static unsigned constexpr  CM_BITS = R_CM * P_CM;
