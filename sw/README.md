@@ -3,7 +3,7 @@
 ## Local Sketch Computation over in-memory values
 ```
 sketch_bench
-``
+```
 
 ## Local Sketch Computation over a File
 ```

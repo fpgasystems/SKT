@@ -27,10 +27,13 @@ add_executable(sketch_fileclient
 target_link_libraries(sketch_fileclient
         ${Boost_LIBRARIES} -lboost_iostreams
 )
-
 add_executable(sketch_tcp_server 
     skt.cpp
     skt_base.cpp
     sketch_tcp_server.cpp
-    )
-
+)
+add_executable(sketch_bench 
+    skt.cpp
+    skt_base.cpp
+    skt_bench.cpp
+)
