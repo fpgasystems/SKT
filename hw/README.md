@@ -41,5 +41,5 @@ bin/skt_stream bin/skt_stream.xclbin 10000000 file.dat
 	- [Count-Min Sketch](src/krnl_skt_stream.cpp#L191)
 - Data Handling
 	- [Basic Metrics](src/krnl_skt_stream.cpp#L260)
-	- [Hash & Distirbute](src/krnl_skt_stream.cpp#L319)
+	- [Hash & Distribute](src/krnl_skt_stream.cpp#L319)
 	- [Result Aggregation](src/krnl_skt_stream.cpp#L340)
