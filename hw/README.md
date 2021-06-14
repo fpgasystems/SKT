@@ -32,3 +32,14 @@ Run the sketch over a (prefix of a) user-supplied file of 32-bit binary data:
 ```bash
 bin/skt_stream bin/skt_stream.xclbin 10000000 file.dat
 ```
+
+## Kernel Source Index
+- [Main Kernel Entry](src/krnl_skt_stream.cpp#L432)
+- Core Sketch Functions:
+	- [HLL Sketch](src/krnl_skt_stream.cpp#L84), [HLL Estimator](src/krnl_skt_stream.cpp#L18)
+	- [Fast AGMS Sketch](src/krnl_skt_stream.cpp#L130)
+	- [Count-Min Sketch](src/krnl_skt_stream.cpp#L191)
+- Data Handling
+	- [Basic Metrics](src/krnl_skt_stream.cpp#L275)
+	- [Hash & Distirbute](src/krnl_skt_stream.cpp#L334)
+	- [Result Aggregation](src/krnl_skt_stream.cpp#L355)
